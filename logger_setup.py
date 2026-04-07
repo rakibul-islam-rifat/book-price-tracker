@@ -34,3 +34,5 @@ def setup_logging(log_file="app.log", level=logging.DEBUG):
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("requests").setLevel(logging.WARNING)
     logging.getLogger("charset_normalizer").setLevel(logging.WARNING)
+    logging.getLogger("apscheduler").setLevel(logging.WARNING)
+    logging.getLogger("tzlocal").setLevel(logging.WARNING)
