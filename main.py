@@ -14,7 +14,7 @@ setup_logging("price_tracker.log")
 logger = logging.getLogger(__name__)
 
 
-def check_price(url: str, file_path: str, threshold: float):
+def check_price(url: str, file_name: str, threshold: float):
     logger.info("Scraping started!")
 
     try:
@@ -43,14 +43,17 @@ def check_price(url: str, file_path: str, threshold: float):
     except Exception as e:
         logger.error("Unable to sent the email. Cause:- %s", e)
 
-    logger.info("saving the book data in your file: %s", file_path)
-    save_to_csv(book, file_path)
-    logger.info("Finished saving. you can check your data from %s", file_path)
+    logger.info("saving the book data in your file: %s", file_name)
+    save_to_csv(book, file_name)
+    logger.info("Finished saving. you can check your data from %s", file_name)
 
 
 def main():
     url: str = input("Please input the url:- ")
-    file_path: str = input("Please input where you want to save your result:- ")
+    file_name: str = input("Please input where you want to save your result:- ")
+    if not file_name.strip():
+        logger.error("Invalid filename")
+        return
     try:
         threshold = float(input("Please input your budget: "))
     except ValueError:
@@ -63,7 +66,7 @@ def main():
         func=check_price,
         trigger="interval",
         hours=6,
-        args=[url, file_path, threshold],
+        args=[url, file_name, threshold],
         next_run_time=datetime.now(),
     )
 

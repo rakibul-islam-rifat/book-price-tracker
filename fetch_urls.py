@@ -46,7 +46,6 @@ def _handle_retry(attempt, error_msg, wait_seconds):
 @add_delay(delay=3)
 def fetch_url(
     url: str,
-    headers: dict = my_header,
     payload: dict | None = None,
     max_attempts: int = 3,
 ) -> requests.Response:
@@ -55,7 +54,7 @@ def fetch_url(
     for attempt in range(1, max_attempts + 1):
         try:
             response: requests.Response = requests.get(
-                url, headers=headers, params=payload, timeout=10
+                url, headers=my_header, params=payload, timeout=10
             )
             response.raise_for_status()
             response.encoding = "utf-8"
@@ -75,6 +74,7 @@ def fetch_url(
                 last_error = e
                 _handle_retry(attempt, f"server error {status_code}", 2)
             else:
+                logger.error("Bad requests, error code: %d", e.response.status_code)
                 raise
 
     logger.error("All %d attempts failed. Last Error: %s", max_attempts, last_error)
